@@ -32,12 +32,13 @@ module.exports = React.createClass({
     var tHead = this.renderTableHead(this.props.columns)
 
     return (
-      <div className='reactPivot-results'>
-        <table className={this.props.tableClassName}>
-          {tHead}
-          {tBody}
-        </table>
-
+      <div>
+        <div className='reactPivot-results'>
+          <table className={this.props.tableClassName}>
+            {tHead}
+            {tBody}
+          </table>
+        </div>
         {this.renderPagination(paginatedResults)}
       </div>
     )
