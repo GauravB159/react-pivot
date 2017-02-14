@@ -122,7 +122,6 @@ module.exports = React.createClass({
           selectedDimensions={this.state.dimensions}
           onChange={this.setDimensions} />
       }
-
         <ColumnControl
           hiddenColumns={this.state.hiddenColumns}
           onChange={this.setHiddenColumns} />
@@ -132,6 +131,8 @@ module.exports = React.createClass({
             Export CSV
           </button>
         </div>
+
+        <div className="reactPivot-clearboth"></div>
 
         { !this.state.solo ? '' :
           <div style={{clear: 'both'}} className='reactPivot-soloDisplay'>

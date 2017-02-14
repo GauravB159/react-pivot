@@ -2,6 +2,10 @@ var _ = { compact: require('lodash/compact') }
 var React = require('react')
 var partial = require('./partial')
 
+var arrayDifference = function (a, b) {
+  return a.filter(function(i) {return b.indexOf(i.title) < 0;});
+}
+
 module.exports = React.createClass({
   getDefaultProps: function () {
     return {
@@ -15,17 +19,20 @@ module.exports = React.createClass({
     var self = this
     var selectedDimensions = this.props.selectedDimensions
     var nSelected = selectedDimensions.length
+    var dimensionsToBeRendered = arrayDifference(self.props.dimensions, selectedDimensions)
 
     return (
       <div className="reactPivot-dimensions">
         {selectedDimensions.map(this.renderDimension)}
 
-        <select value={''} onChange={partial(self.toggleDimension, nSelected)}>
-          <option value={''}>Sub Dimension...</option>
-          {self.props.dimensions.map(function(dimension) {
-            return <option key={dimension.title}>{dimension.title}</option>
-          })}
-        </select>
+        {dimensionsToBeRendered.length > 0 &&
+          <select value={''} onChange={partial(self.toggleDimension, nSelected)}>
+            <option value={''}>Sub Dimension...</option>
+            {dimensionsToBeRendered.map(function(dimension) {
+              return <option key={dimension.title}>{dimension.title}</option>
+            })}
+          </select>
+        }
       </div>
     )
   },
@@ -36,7 +43,7 @@ module.exports = React.createClass({
         value={selectedDimension}
         onChange={partial(this.toggleDimension, i)}
         key={selectedDimension} >
-        <option></option>
+        <option value="">X Clear Selection</option>
         {this.props.dimensions.map(function(dimension) {
           return (
             <option
