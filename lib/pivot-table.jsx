@@ -102,14 +102,23 @@ module.exports = React.createClass({
   },
 
   renderCell: function(col, row) {
+    var val,
+      text,
+      dimensionExists,
+      title_val;
     if (col.type === 'dimension') {
-      var val = row[col.title]
-      var text = val
-      var dimensionExists = (typeof val) !== 'undefined'
-      if (col.template && dimensionExists) text = col.template(val, row)
+      val = row[col.title];
+      text = val;
+      dimensionExists = (typeof val) !== 'undefined';
+      title_val = `${col.title}: ${text}`;
+
+      if (col.template && dimensionExists) {
+        text = col.template(val, row);
+      }
+
     } else {
-      var val = getValue(col, row)
-      var text = val
+      val = getValue(col, row);
+      text = val;
       if (col.template) text = col.template(val, row)
     }
 
@@ -128,7 +137,7 @@ module.exports = React.createClass({
     return(
       <td className={col.className}
           key={[col.title, row.key].join('\xff')}
-          title={col.title}>
+          title={title_val ? title_val : col.title }>
         <span dangerouslySetInnerHTML={{__html: text || ''}}></span> {solo}
       </td>
     )

@@ -11,7 +11,8 @@ module.exports = React.createClass({
     return {
       dimensions: [],
       selectedDimensions: [],
-      onChange: function () {}
+      onChange: function () {},
+      onDimensionChange: function () {}
     }
   },
 
@@ -68,5 +69,6 @@ module.exports = React.createClass({
     var updatedDimensions = _.compact(dimensions)
 
     this.props.onChange(updatedDimensions)
+    this.props.onDimensionChange({event: evt, selectedDimensions: dimensions})
   },
 })

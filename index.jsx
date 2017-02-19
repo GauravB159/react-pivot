@@ -34,7 +34,8 @@ module.exports = React.createClass({
       eventBus: new Emitter,
       compact: false,
       excludeSummaryFromExport: false,
-      onData: function () {}
+      onData: function () {},
+      onDimensionChange: function () {}
     }
   },
 
@@ -120,7 +121,8 @@ module.exports = React.createClass({
         <Dimensions
           dimensions={this.props.dimensions}
           selectedDimensions={this.state.dimensions}
-          onChange={this.setDimensions} />
+          onChange={this.setDimensions}
+          onDimensionChange={this.props.onDimensionChange} />
       }
         <ColumnControl
           hiddenColumns={this.state.hiddenColumns}
