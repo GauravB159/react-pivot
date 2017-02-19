@@ -44,7 +44,7 @@ module.exports = React.createClass({
         value={selectedDimension}
         onChange={partial(this.toggleDimension, i)}
         key={selectedDimension} >
-        <option value="">X Clear Selection</option>
+        <option className="reactPivot-clearSelection" value="">x Clear Selection</option>
         {this.props.dimensions.map(function(dimension) {
           return (
             <option
