@@ -1,8 +1,10 @@
 var _ = {
   filter: require('lodash/filter'),
   map: require('lodash/map'),
-  find: require('lodash/find')
+  find: require('lodash/find'),
+  compact: require('lodash/compact')
 }
+
 var React = require('react')
 var DataFrame = require('dataframe')
 var Emitter = require('wildemitter')
@@ -117,16 +119,18 @@ module.exports = React.createClass({
     var html = (
       <div className='reactPivot'>
 
-      { this.props.hideDimensionFilter ? '' :
-        <Dimensions
-          dimensions={this.props.dimensions}
-          selectedDimensions={this.state.dimensions}
-          onChange={this.setDimensions}
-          onDimensionChange={this.props.onDimensionChange} />
-      }
+      <div  className="reactPivot-filterSelection">
+        { this.props.hideDimensionFilter ? '' :
+          <Dimensions
+            dimensions={this.props.dimensions}
+            selectedDimensions={this.state.dimensions}
+            onChange={this.setDimensions}
+            onDimensionChange={this.props.onDimensionChange} />
+        }
         <ColumnControl
           hiddenColumns={this.state.hiddenColumns}
           onChange={this.setHiddenColumns} />
+      </div>
 
         <div className="reactPivot-csvExport">
           <button onClick={partial(this.downloadCSV, this.state.rows)}>
@@ -152,7 +156,9 @@ module.exports = React.createClass({
           sortDir={this.state.sortDir}
           onSort={this.setSort}
           onColumnHide={this.hideColumn}
+          onDimensionColumnHide={this.hideDimensionColumn}
           nPaginateRows={this.props.nPaginateRows}
+          selectedDimensions={this.state.dimensions}
           onSolo={this.setSolo} />
 
       </div>
@@ -233,6 +239,20 @@ module.exports = React.createClass({
   hideColumn: function(cTitle) {
     var hidden = this.state.hiddenColumns.concat([cTitle])
     this.setHiddenColumns(hidden)
+    setTimeout(this.updateRows, 0)
+  },
+
+  hideDimensionColumn: function (c_title) {
+    const dimension = c_title;
+    let  dimensions = this.state.dimensions;
+    const curIdx = dimensions.indexOf(dimension);
+
+    if (curIdx >= 0) dimensions[curIdx] = null; // Removing the selected dimension.
+
+    const updatedDimensions = _.compact(dimensions);
+
+    this.setDimensions(updatedDimensions)
+    this.props.onDimensionChange({event: this, selectedDimensions: updatedDimensions})
     setTimeout(this.updateRows, 0)
   },
 

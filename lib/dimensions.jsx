@@ -24,11 +24,9 @@ module.exports = React.createClass({
 
     return (
       <div className="reactPivot-dimensions">
-        {selectedDimensions.map(this.renderDimension)}
-
         {dimensionsToBeRendered.length > 0 &&
           <select value={''} onChange={partial(self.toggleDimension, nSelected)}>
-            <option value={''}>Sub Dimension...</option>
+            <option value={''} hidden={true}>Add Dimension</option>
             {dimensionsToBeRendered.map(function(dimension) {
               return <option key={dimension.title}>{dimension.title}</option>
             })}

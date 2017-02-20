@@ -66,8 +66,7 @@
 .reactPivot-solo:hover {font-weight: bold}
 td:hover .reactPivot-solo {opacity: 0.5}
 
-.reactPivot-csvExport,
-.reactPivot-columnControl {
+.reactPivot-csvExport {
   float: right;
   margin-left: 5px;
 }
@@ -83,7 +82,8 @@ td:hover .reactPivot-solo {opacity: 0.5}
   margin-top: 5px;
 }
 
-.reactPivot-dimensions {
+.reactPivot-dimensions,
+.reactPivot-columnControl {
   float: left;
   padding: 10px 0;
   text-align: left;

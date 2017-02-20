@@ -11,9 +11,11 @@ module.exports = React.createClass({
       rows: [],
       sortBy: null,
       sortDir: 'asc',
+      selectedDimensions: [],
       onSort: function () {},
       onSolo: function () {},
-      onColumnHide: function () {}
+      onColumnHide: function () {},
+      onDimensionColumnHide: function () {}
     }
   },
 
@@ -48,6 +50,7 @@ module.exports = React.createClass({
     var self = this
     var sortBy = this.props.sortBy
     var sortDir =  this.props.sortDir
+    const selected_dimensions = this.props.selectedDimensions;
 
     return (
       <thead>
@@ -57,12 +60,21 @@ module.exports = React.createClass({
             if (col.title === sortBy) className += ' ' + sortDir
 
             var hide = ''
-            if (col.type !== 'dimension') hide = (
-              <span className='reactPivot-hideColumn'
-                    onClick={partial(self.props.onColumnHide, col.title)}>
-                &times;
-              </span>
-            )
+            if (col.type === 'calculation') {
+              hide = (
+                <span className='reactPivot-hideColumn'
+                      onClick={partial(self.props.onColumnHide, col.title)}>
+                  &times;
+                </span>
+              )
+            } else {
+              hide = (
+                <span className='reactPivot-hideColumn'
+                      onClick={partial(self.props.onDimensionColumnHide, col.title, selected_dimensions.indexOf(col.title))}>
+                  &times;
+                </span>
+              )
+            }
 
             return (
               <th className={className}
