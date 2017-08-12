@@ -6,7 +6,15 @@
   "browser": "index.jsx",
   "browserify": {
     "transform": [
-      ["babelify", {"presets": ["es2015", "react"]}],
+      [
+        "babelify",
+        {
+          "presets": [
+            "es2015",
+            "react"
+          ]
+        }
+      ],
       "envify",
       "cssify"
     ]

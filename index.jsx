@@ -114,8 +114,14 @@ module.exports = React.createClass({
 
     return columns
   },
-
+  searchChange: function(e){
+    console.log(e.target.value);
+    this.setState({
+      searchValue: e.target.value
+    });
+  },
   render: function() {
+    var self=this;
     var html = (
       <div className='reactPivot'>
 
@@ -127,6 +133,7 @@ module.exports = React.createClass({
             onChange={this.setDimensions}
             onDimensionChange={this.props.onDimensionChange} />
         }
+        <div className="reactPivot-search"> Search: <input type="text" id="search" onChange={this.searchChange }/></div>
         <ColumnControl
           hiddenColumns={this.state.hiddenColumns}
           onChange={this.setHiddenColumns} />
@@ -152,6 +159,7 @@ module.exports = React.createClass({
         <PivotTable
           columns={this.getColumns()}
           rows={this.state.rows}
+          searchValue={this.state.searchValue}
           sortBy={this.state.sortBy}
           sortDir={this.state.sortDir}
           onSort={this.setSort}

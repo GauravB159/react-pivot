@@ -4,7 +4,6 @@ var partial = require('./partial')
 var getValue = require('./get-value')
 
 module.exports = React.createClass({
-
   getDefaultProps: function () {
     return {
       columns: [],
@@ -26,13 +25,21 @@ module.exports = React.createClass({
   },
 
   render: function() {
-    var results = this.props.rows
-
+    var results = JSON.parse(JSON.stringify(this.props.rows));
+    var self = this;
+    results = results.filter(function(result){
+      if(self.state.searchDimension === undefined || self.props.searchValue === "" || self.props.searchValue === undefined)
+        return true;
+      if(result[self.state.searchDimension] === undefined)
+        return false;
+      var lcheck=result[self.state.searchDimension].toLowerCase();
+      var rcheck=self.props.searchValue.toLowerCase();
+      return (lcheck.indexOf(rcheck) >= 0 );
+     });
     var paginatedResults = this.paginate(results)
 
     var tBody = this.renderTableBody(this.props.columns, paginatedResults.rows)
     var tHead = this.renderTableHead(this.props.columns)
-
     return (
       <div>
         <div className='reactPivot-results'>
@@ -45,13 +52,18 @@ module.exports = React.createClass({
       </div>
     )
   },
-
+  handleSearchClick: function(col){
+    this.setState({
+      searchDimension:col.title
+    });
+    var search = document.getElementById("search");
+    search.placeholder="Search by " + col.title;
+  },
   renderTableHead: function(columns) {
     var self = this
     var sortBy = this.props.sortBy
     var sortDir =  this.props.sortDir
     const selected_dimensions = this.props.selectedDimensions;
-
     return (
       <thead>
         <tr>
@@ -75,7 +87,6 @@ module.exports = React.createClass({
                 </span>
               )
             }
-
             return (
               <th className={className}
                   onClick={partial(self.props.onSort, col.title)}
@@ -84,6 +95,7 @@ module.exports = React.createClass({
 
                 {hide}
                 {col.title}
+                {col.type === "dimension" && <span onClick={function(){ self.handleSearchClick(col) } }>S</span> }
               </th>
             )
           })}
@@ -94,15 +106,16 @@ module.exports = React.createClass({
 
   renderTableBody: function(columns, rows) {
     var self = this
-
+    rows.forEach(function(row){
+      console.log(row);
+    });
     return (
       <tbody>
         {rows.map(function(row) {
           return (
             <tr key={row._key} className={"reactPivot-level-" + row._level}>
               {columns.map(function(col, i) {
-                if (i < row._level) return <td key={i} className='reactPivot-indent' />
-
+                //if (i < row._level) return <td key={i} className='reactPivot-indent' />
                 return self.renderCell(col, row)
               })}
             </tr>
@@ -145,7 +158,6 @@ module.exports = React.createClass({
         </span>
       )
     }
-
     return(
       <td className={col.className}
           key={[col.title, row.key].join('\xff')}
