@@ -133,7 +133,7 @@ module.exports = React.createClass({
             onChange={this.setDimensions}
             onDimensionChange={this.props.onDimensionChange} />
         }
-        <div className="reactPivot-search"> Search: <input type="text" id="search" onChange={this.searchChange }/></div>
+        <div className="reactPivot-search"> Search: <input type="text" id="search" placeholder="Select a dimension to search" disabled="disabled" onChange={this.searchChange }/></div>
         <ColumnControl
           hiddenColumns={this.state.hiddenColumns}
           onChange={this.setHiddenColumns} />
@@ -252,6 +252,11 @@ module.exports = React.createClass({
 
   hideDimensionColumn: function (c_title) {
     const dimension = c_title;
+    var search = document.getElementById("search");
+    if(search){
+      search.placeholder="Select a dimension to search";
+      search.disabled="disabled";
+    }
     let  dimensions = this.state.dimensions;
     const curIdx = dimensions.indexOf(dimension);
 

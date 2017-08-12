@@ -23,12 +23,14 @@ module.exports = React.createClass({
       paginatePage: 0
     }
   },
-
   render: function() {
     var results = JSON.parse(JSON.stringify(this.props.rows));
     var self = this;
+    var search = document.getElementById("search");
+    if(search)
+      search=search.value;
     results = results.filter(function(result){
-      if(self.state.searchDimension === undefined || self.props.searchValue === "" || self.props.searchValue === undefined)
+      if(search === "" || self.state.searchDimension === undefined || self.props.searchValue === "" || self.props.searchValue === undefined)
         return true;
       if(result[self.state.searchDimension] === undefined)
         return false;
@@ -52,12 +54,15 @@ module.exports = React.createClass({
       </div>
     )
   },
-  handleSearchClick: function(col){
+  handleSearchClick: function(col,e){
     this.setState({
       searchDimension:col.title
     });
     var search = document.getElementById("search");
     search.placeholder="Search by " + col.title;
+    search.value="";
+    search.removeAttribute("disabled");
+    e.stopPropagation();
   },
   renderTableHead: function(columns) {
     var self = this
@@ -82,7 +87,7 @@ module.exports = React.createClass({
             } else {
               hide = (
                 <span className='reactPivot-hideColumn'
-                      onClick={partial(self.props.onDimensionColumnHide, col.title, selected_dimensions.indexOf(col.title))}>
+                      onClick={partial(self.props.onDimensionColumnHide, col.title, selected_dimensions.indexOf(col.title), true)}>
                   &times;
                 </span>
               )
@@ -95,7 +100,7 @@ module.exports = React.createClass({
 
                 {hide}
                 {col.title}
-                {col.type === "dimension" && <span onClick={function(){ self.handleSearchClick(col) } }>S</span> }
+                {col.type === "dimension" && <span onClick={function(e){ self.handleSearchClick(col,e) } }><i className="search icon"></i></span> }
               </th>
             )
           })}
@@ -106,9 +111,6 @@ module.exports = React.createClass({
 
   renderTableBody: function(columns, rows) {
     var self = this
-    rows.forEach(function(row){
-      console.log(row);
-    });
     return (
       <tbody>
         {rows.map(function(row) {
